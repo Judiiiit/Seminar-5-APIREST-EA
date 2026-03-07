@@ -7,7 +7,7 @@ export interface IUser extends Document {
 
 const UserSchema: Schema = new Schema({
     name: { type: String, required: true },
-    organization: { type: Schema.Types.ObjectId, required: true, ref: 'Organization' }
+    organization: { type: Schema.Types.ObjectId, required: true, ref: 'OrganizationManual' }
 });
 
 export default mongoose.model<IUser>('UserManual', UserSchema);
