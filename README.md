@@ -8,8 +8,7 @@ API REST construida con **Node.js**, **Express**, **TypeScript** y **Mongoose** 
 Para completar el ejercicio propuesto se ha usado:
   - Para acabar de entender el populate: https://mongoosejs.com/docs/typescript/populate.html
   - Para saber como hacer push y pull en typescript y mongoose: https://www.mongodb.com/es/docs/manual/reference/operator/update/push/ y https://www.mongodb.com/es/docs/manual/reference/operator/update/pull/
-  - Uso de IA generativa (ChatGPT) en los comentarios @openapi de los archivos /routes, revisar la sintaxis en algun endopoint (resolver errores).
-
+  - Uso de IA generativa (ChatGPT) en los comentarios @openapi de los archivos /routes nuevos, revisar la sintaxis en algun endopoint (resolver errores).
 
 ---
 
