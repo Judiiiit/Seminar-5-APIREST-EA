@@ -4,7 +4,7 @@ export interface IUsuario {
     name: string;
     email: string;
     password: string;
-    organizacion: mongoose.Types.ObjectId | string;
+    organizacion: mongoose.Types.ObjectId;
 }
 
 export interface IUsuarioModel extends IUsuario, Document {}
@@ -18,6 +18,7 @@ const UsuarioSchema: Schema = new Schema(
     },
     {
         timestamps: true,
+        id : false,
         versionKey: false
     }
 );

@@ -13,7 +13,13 @@ const createOrganizacion = async (req: Request, res: Response, next: NextFunctio
 
 const readOrganizacion = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const organizacion = await OrganizacionService.getOrganizacion(req.params.organizacionId);
+        const { organizacionId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(organizacionId)) {
+            return res.status(404).json({ message: 'not found' });
+        }
+
+        const organizacion = await OrganizacionService.getOrganizacion(organizacionId);
         return organizacion ? res.status(200).json(organizacion) : res.status(404).json({ message: 'not found' });
     } catch (error) {
         return res.status(500).json({ error });
@@ -24,6 +30,21 @@ const readAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const organizaciones = await OrganizacionService.getAllOrganizaciones();
         return res.status(200).json(organizaciones);
+    } catch (error) {
+        return res.status(500).json({ error });
+    }
+};
+
+const readUsuariosByOrganizacion = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { organizacionId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(organizacionId)) {
+            return res.status(404).json({ message: 'not found' });
+        }
+
+        const usuarios = await OrganizacionService.getUsuariosByOrganizacion(organizacionId);
+        return usuarios ? res.status(200).json(usuarios) : res.status(404).json({ message: 'not found' });
     } catch (error) {
         return res.status(500).json({ error });
     }
@@ -45,10 +66,17 @@ const deleteOrganizacion = async (req: Request, res: Response, next: NextFunctio
 
     try {
         const organizacion = await OrganizacionService.deleteOrganizacion(organizacionId);
-        return organizacion ? res.status(201).json(organizacion) : res.status(404).json({ message: 'not found' });
+        return organizacion ? res.status(200).json(organizacion) : res.status(404).json({ message: 'not found' });
     } catch (error) {
         return res.status(500).json({ error });
     }
 };
 
-export default { createOrganizacion, readOrganizacion, readAll, updateOrganizacion, deleteOrganizacion };
+export default {
+    createOrganizacion,
+    readOrganizacion,
+    readAll,
+    readUsuariosByOrganizacion,
+    updateOrganizacion,
+    deleteOrganizacion
+};

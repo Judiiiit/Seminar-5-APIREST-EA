@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Organizacion, { IOrganizacionModel, IOrganizacion } from '../models/Organizacion';
+import Usuario, { IUsuarioModel } from '../models/Usuario';
 
 const createOrganizacion = async (data: Partial<IOrganizacion>): Promise<IOrganizacionModel> => {
     const organizacion = new Organizacion({
@@ -10,14 +11,25 @@ const createOrganizacion = async (data: Partial<IOrganizacion>): Promise<IOrgani
 };
 
 const getOrganizacion = async (organizacionId: string): Promise<IOrganizacionModel | null> => {
-    return await Organizacion.findById(organizacionId);
+    return await Organizacion.findById(organizacionId).populate('usuarios');
 };
 
 const getAllOrganizaciones = async (): Promise<IOrganizacionModel[]> => {
-    return await Organizacion.find();
+    return await Organizacion.find().populate('usuarios');
 };
 
-const updateOrganizacion = async (organizacionId: string, data: Partial<IOrganizacion>): Promise<IOrganizacionModel | null> => {
+const getUsuariosByOrganizacion = async (organizacionId: string): Promise<IUsuarioModel[] | null> => {
+    const organizacion = await Organizacion.findById(organizacionId);
+
+    if (!organizacion) return null;
+
+    return await Usuario.find({ organizacion: organizacionId }).populate('organizacion');
+};
+
+const updateOrganizacion = async (
+    organizacionId: string,
+    data: Partial<IOrganizacion>
+): Promise<IOrganizacionModel | null> => {
     const organizacion = await Organizacion.findById(organizacionId);
     if (organizacion) {
         organizacion.set(data);
@@ -30,4 +42,11 @@ const deleteOrganizacion = async (organizacionId: string): Promise<IOrganizacion
     return await Organizacion.findByIdAndDelete(organizacionId);
 };
 
-export default { createOrganizacion, getOrganizacion, getAllOrganizaciones, updateOrganizacion, deleteOrganizacion };
+export default {
+    createOrganizacion,
+    getOrganizacion,
+    getAllOrganizaciones,
+    getUsuariosByOrganizacion,
+    updateOrganizacion,
+    deleteOrganizacion
+};
