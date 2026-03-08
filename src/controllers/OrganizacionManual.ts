@@ -13,16 +13,16 @@ const createOrganizacionManual = async (req: Request, res: Response, next: NextF
     }
 };
 
-const readOrganizacionesManual = async (req: Request, res: Response, next: NextFunction) => {
+const getAllOrganizacionesManual = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const organizaciones = await OrganizacionManualService.readOrganizacionesManual();
+        const organizaciones = await OrganizacionManualService.getAllOrganizacionesManual();
         return res.status(200).json(organizaciones);
     } catch (error) {
         return res.status(500).json({ error });
     }
 };
 
-const readOrganizacionManual = async (req: Request, res: Response, next: NextFunction) => {
+const getOrganizacionManual = async (req: Request, res: Response, next: NextFunction) => {
     const { organizacionId } = req.params;
 
     try {
@@ -30,7 +30,7 @@ const readOrganizacionManual = async (req: Request, res: Response, next: NextFun
             return res.status(404).json({ message: 'not found' });
         }
 
-        const organizacion = await OrganizacionManualService.readOrganizacionManualById(organizacionId);
+        const organizacion = await OrganizacionManualService.getOrganizacionManualById(organizacionId);
 
         return organizacion
             ? res.status(200).json(organizacion)
@@ -40,7 +40,7 @@ const readOrganizacionManual = async (req: Request, res: Response, next: NextFun
     }
 };
 
-const readUsuariosByOrganizacionManual = async (req: Request, res: Response, next: NextFunction) => {
+const getUsuariosByOrganizacionManual = async (req: Request, res: Response, next: NextFunction) => {
     const { organizacionId } = req.params;
 
     try {
@@ -48,7 +48,7 @@ const readUsuariosByOrganizacionManual = async (req: Request, res: Response, nex
             return res.status(404).json({ message: 'not found' });
         }
 
-        const usuarios = await OrganizacionManualService.readUsuariosByOrganizacionManual(organizacionId);
+        const usuarios = await OrganizacionManualService.getUsuariosByOrganizacionManual(organizacionId);
 
         return usuarios
             ? res.status(200).json(usuarios)
@@ -57,6 +57,18 @@ const readUsuariosByOrganizacionManual = async (req: Request, res: Response, nex
         return res.status(500).json({ error });
     }
 };
+
+const updateOrganizacionManual = async (req: Request, res: Response, next: NextFunction) => {
+    const organizacionId = req.params.organizacionId;
+
+    try {
+        const organizacion = await OrganizacionManualService.updateOrganizacionManual(organizacionId, req.body);
+        return organizacion ? res.status(200).json(organizacion) : res.status(404).json({ message: 'not found' });
+    } catch (error) {
+        return res.status(500).json({ error });
+    }
+};
+
 
 const deleteOrganizacionManual = async (req: Request, res: Response, next: NextFunction) => {
     const { organizacionId } = req.params;
@@ -79,5 +91,5 @@ const deleteOrganizacionManual = async (req: Request, res: Response, next: NextF
     }
 };
 
-export default {createOrganizacionManual, readOrganizacionesManual, readOrganizacionManual, readUsuariosByOrganizacionManual, deleteOrganizacionManual
+export default {createOrganizacionManual, getAllOrganizacionesManual, getOrganizacionManual, getUsuariosByOrganizacionManual, updateOrganizacionManual, deleteOrganizacionManual
 };

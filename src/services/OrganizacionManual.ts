@@ -10,30 +10,43 @@ const createOrganizacionManual = async (name: string): Promise<IOrganizacionManu
     return await organizacion.save();
 };
 
-const readOrganizacionesManual = async (): Promise<IOrganizacionManual[]> => {
-    return await OrganizacionManual.find().populate('users');
+const getAllOrganizacionesManual = async (): Promise<IOrganizacionManual[]> => {
+    return await OrganizacionManual.find().populate('users').lean();
 };
 
-const readOrganizacionManualById = async (organizacionId: string): Promise<IOrganizacionManual | null> => {
-    return await OrganizacionManual.findById(organizacionId).populate('users');
+const getOrganizacionManualById = async (organizacionId: string): Promise<IOrganizacionManual | null> => {
+    return await OrganizacionManual.findById(organizacionId).populate('users').lean();
 };
 
-const readUsuariosByOrganizacionManual = async (organizacionId: string): Promise<IUsuarioManual[] | null> => {
-    const organizacion = await OrganizacionManual.findById(organizacionId).populate('users');
+const getUsuariosByOrganizacionManual = async (organizacionId: string): Promise<IUsuarioManual[] | null> => {
+    const organizacion = await OrganizacionManual.findById(organizacionId).populate('users').lean();
 
     if (!organizacion) return null;
 
     return organizacion.users as unknown as IUsuarioManual[];
 };
 
+
 const deleteOrganizacionManual = async (organizacionId: string) => {
-    return await OrganizacionManual.findByIdAndDelete(organizacionId);
+    return await OrganizacionManual.findByIdAndDelete(organizacionId).lean();
+};
+
+const updateOrganizacionManual = async (organizacionId: string, data: Partial<IOrganizacionManual>) => {
+    const organizacion = await OrganizacionManual.findById(organizacionId);
+
+    if (!organizacion) return null;
+
+    organizacion.set(data);
+    await organizacion.save();
+
+    return await OrganizacionManual.findById(organizacionId).populate('usuarios').lean();
 };
 
 export default {
     createOrganizacionManual,
-    readOrganizacionesManual,
-    readOrganizacionManualById,
-    readUsuariosByOrganizacionManual,
+    getAllOrganizacionesManual,
+    getOrganizacionManualById,
+    getUsuariosByOrganizacionManual,
+    updateOrganizacionManual,
     deleteOrganizacionManual
 };

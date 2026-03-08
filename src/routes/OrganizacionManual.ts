@@ -1,5 +1,6 @@
 import express from 'express';
 import controller from '../controllers/OrganizacionManual';
+import { Schemas, ValidateJoi } from '../middleware/Joi';
 
 const router = express.Router();
 
@@ -39,7 +40,7 @@ router.post('/organizaciones', controller.createOrganizacionManual);
  *       200:
  *         description: Lista de organizaciones manuales
  */
-router.get('/organizaciones', controller.readOrganizacionesManual);
+router.get('/organizaciones', controller.getAllOrganizacionesManual);
 
 /**
  * @openapi
@@ -61,7 +62,7 @@ router.get('/organizaciones', controller.readOrganizacionesManual);
  *       404:
  *         description: Organización no encontrada
  */
-router.get('/organizaciones/:organizacionId', controller.readOrganizacionManual);
+router.get('/organizaciones/:organizacionId', controller.getOrganizacionManual);
 
 /**
  * @openapi
@@ -83,7 +84,40 @@ router.get('/organizaciones/:organizacionId', controller.readOrganizacionManual)
  *       404:
  *         description: Organización no encontrada
  */
-router.get('/organizaciones/:organizacionId/usuarios', controller.readUsuariosByOrganizacionManual);
+router.get('/organizaciones/:organizacionId/usuarios', controller.getUsuariosByOrganizacionManual);
+
+/**
+ * @openapi
+ * /organizaciones/{organizacionId}:
+ *   put:
+ *     summary: Actualiza una organización por ID
+ *     tags: [Organizaciones]
+ *     parameters:
+ *       - in: path
+ *         name: organizacionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ObjectId de la organización
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/OrganizacionCreateUpdate'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Organizacion'
+ *       404:
+ *         description: No encontrado
+ *       422:
+ *         description: Validación fallida (Joi)
+ */
+router.put('/:organizacionId', ValidateJoi(Schemas.organizacion.update), controller.updateOrganizacionManual);
 
 /**
  * @openapi

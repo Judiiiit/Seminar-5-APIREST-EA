@@ -11,25 +11,24 @@ const createOrganizacion = async (data: Partial<IOrganizacion>): Promise<IOrgani
 };
 
 const getOrganizacion = async (organizacionId: string): Promise<IOrganizacionModel | null> => {
-    return await Organizacion.findById(organizacionId).populate('usuarios');
+    return await Organizacion.findById(organizacionId).populate('usuarios').lean();
 };
 
 const getAllOrganizaciones = async (): Promise<IOrganizacionModel[]> => {
-    return await Organizacion.find().populate('usuarios');
+    return await Organizacion.find().populate('usuarios').lean();
 };
 
 const getUsuariosByOrganizacion = async (organizacionId: string): Promise<IUsuarioModel[] | null> => {
-    const organizacion = await Organizacion.findById(organizacionId);
+    const organizacion = await Organizacion.findById(organizacionId).lean();
 
     if (!organizacion) return null;
 
-    return await Usuario.find({ organizacion: organizacionId }).populate('organizacion');
+    return await Usuario.find({ organizacion: organizacionId }).populate('organizacion').lean();
 };
 
 const updateOrganizacion = async (
     organizacionId: string,
-    data: Partial<IOrganizacion>
-): Promise<IOrganizacionModel | null> => {
+    data: Partial<IOrganizacion>): Promise<IOrganizacionModel | null> => {
     const organizacion = await Organizacion.findById(organizacionId);
     if (organizacion) {
         organizacion.set(data);
@@ -39,7 +38,7 @@ const updateOrganizacion = async (
 };
 
 const deleteOrganizacion = async (organizacionId: string): Promise<IOrganizacionModel | null> => {
-    return await Organizacion.findByIdAndDelete(organizacionId);
+    return await Organizacion.findByIdAndDelete(organizacionId).lean();
 };
 
 export default {
